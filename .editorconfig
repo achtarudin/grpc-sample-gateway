@@ -1,0 +1,64 @@
+# Root file .editorconfig
+root = true
+
+# =========================================================
+# Pengaturan Global (Berlaku untuk semua file kecuali ditimpa)
+# =========================================================
+
+[*]
+# Mengakhiri file dengan baris kosong (newline)
+insert_final_newline = true
+# Mengakhiri baris dengan karakter LF (Line Feed) yang merupakan standar Unix
+end_of_line = lf
+# Menghapus spasi yang tidak perlu di akhir baris
+trim_trailing_whitespace = true
+# Mengatur encoding karakter ke UTF-8
+charset = utf-8
+
+
+# =========================================================
+# Tipe File Khusus
+# =========================================================
+
+# ---------------------------------------------------------
+# Go (*.go) - Mengikuti standar gofmt
+# ---------------------------------------------------------
+[*.go]
+# Go menggunakan tab untuk indentasi
+indent_style = tab
+# Lebar tab/indentasi adalah 4 karakter
+indent_size = 4
+
+
+# ---------------------------------------------------------
+# YAML (*.yml, *.yaml) - Biasanya menggunakan spasi (2 atau 4)
+# ---------------------------------------------------------
+[*.yml]
+indent_style = space
+# YAML seringkali menggunakan indentasi 2 spasi
+indent_size = 2
+
+[*.yaml]
+indent_style = space
+indent_size = 2
+
+
+# ---------------------------------------------------------
+# Dockerfile dan .env - Biasanya menggunakan spasi (2 atau 4)
+# ---------------------------------------------------------
+[Dockerfile]
+indent_style = space
+indent_size = 4
+
+[*.env]
+indent_style = space
+indent_size = 4
+
+
+# ---------------------------------------------------------
+# Markdown (*.md) - Tidak memaksakan style indentasi/spasi
+# ---------------------------------------------------------
+[*.md]
+# Jangan trim spasi di akhir baris karena dua spasi di akhir baris
+# sering digunakan untuk soft line break di Markdown.
+trim_trailing_whitespace = false

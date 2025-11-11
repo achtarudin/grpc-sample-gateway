@@ -1,0 +1,35 @@
+services:
+
+  dev:
+    build:
+      context: .
+      dockerfile: docker/go.dev.Dockerfile
+    container_name: grpc-sample-gateway-dev
+
+    env_file:
+      - ./.env
+
+    working_dir: /app
+
+    networks:
+      - grpc_sample_network
+
+    volumes:
+      - .:/app
+      - go-gateway-cache:/go/pkg/mod
+
+    ports:
+      - "${GATEWAY_PORT}:${GATEWAY_PORT}"
+
+    environment:
+      - GATEWAY_PORT=${GATEWAY_PORT}
+      - GOMODCACHE=/go/pkg/mod
+
+volumes:
+  go-gateway-cache:
+
+networks:
+  grpc_sample_network:
+    external: true
+    name: grpc_sample_network
+

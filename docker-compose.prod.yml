@@ -1,0 +1,26 @@
+services:
+
+  grpc-sample-gateway-prod:
+    build:
+      context: .
+      dockerfile: docker/go.prod.Dockerfile
+    image: ${IMAGE_NAME:-grpc-sample-gateway}:${IMAGE_VERSION:-latest}
+    container_name: grpc-sample-gateway-prod
+    ports:
+      - "6000:6000"
+    environment:
+      - GATEWAY_PORT=6000
+    labels:
+      - "traefik.enable=true"
+
+      - "traefik.http.routers.grpc-sample-gateway-prod.rule=Host(`grpc-gateway.cutbray.tech`)"
+      - "traefik.http.routers.grpc-sample-gateway-prod.entrypoints=websecure"
+      - "traefik.http.services.grpc-sample-gateway-prod.loadbalancer.server.port=6000"
+
+      - "traefik.http.routers.grpc-sample-gateway-prod.tls=true"
+      - "traefik.http.routers.grpc-sample-gateway-prod.tls.certresolver=myresolver"
+
+networks:
+  traefik-network:
+    external: true
+    name: traefik-network
