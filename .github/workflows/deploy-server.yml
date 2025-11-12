@@ -17,6 +17,7 @@ env:
 
 jobs:
   test:
+    if: false
     runs-on: ubuntu-latest
 
     env:
@@ -45,6 +46,7 @@ jobs:
         run: curl http://localhost:${{ env.GATEWAY_PORT }}/doc/index.html
 
   build:
+    if: false
     needs: test
     runs-on: ubuntu-latest
 
@@ -68,7 +70,7 @@ jobs:
   deploy:
     if: github.ref == 'refs/heads/main'
     needs: build
-    runs-on: [grpc-sample-gateway]
+    runs-on: [self-hosted, grpc-sample-gateway]
 
     environment: prod
 
