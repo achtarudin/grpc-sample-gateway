@@ -111,25 +111,3 @@ jobs:
 
       - name: Check running containers
         run: docker ps -a
-
-  check:
-    if : false
-    runs-on: [self-hosted, grpc-sample-gateway]
-
-    environment: prod
-
-    env:
-      PATH_PROJECT: ${{ vars.PATH_PROJECT }}
-
-    steps:
-      - name: Check Whoami
-        run: whoami
-
-      - name: Enter to project directory
-        run: cd ${{ env.PATH_PROJECT }} && echo $(pwd)
-
-      - name: List files in project directory
-        run: ls -la ${{ env.PATH_PROJECT }}
-
-      - name: Curl Http Endpoint
-        run: curl http://localhost:6000/doc/index.html
