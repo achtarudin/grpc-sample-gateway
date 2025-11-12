@@ -10,15 +10,6 @@ services:
       - "6000:6000"
     environment:
       - GATEWAY_PORT=6000
-    labels:
-      - "traefik.enable=true"
-
-      - "traefik.http.routers.grpc-sample-gateway-prod.rule=Host(`grpc-gateway.cutbray.tech`)"
-      - "traefik.http.routers.grpc-sample-gateway-prod.entrypoints=websecure"
-      - "traefik.http.services.grpc-sample-gateway-prod.loadbalancer.server.port=6000"
-
-      - "traefik.http.routers.grpc-sample-gateway-prod.tls=true"
-      - "traefik.http.routers.grpc-sample-gateway-prod.tls.certresolver=myresolver"
 
 networks:
   traefik-network:

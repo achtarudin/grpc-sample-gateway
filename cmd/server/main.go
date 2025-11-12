@@ -34,10 +34,6 @@ func main() {
 	envGrpcTls := helper.GetEnvOrDefault("GRPC_TLS", false)
 	envGatewayPort := helper.GetEnvOrDefault("GATEWAY_PORT", 8081)
 
-	// Setup graceful shutdown
-	shutdown, stop := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
-	defer stop()
-
 	// Setup gRPC Gateway
 	serveMux := runtime.NewServeMux()
 	gatewayConfig := &gateway.GatewayConfig{
@@ -45,6 +41,10 @@ func main() {
 		GrpcTLS:          envGrpcTls,
 		ServeMux:         serveMux,
 	}
+
+	// Setup graceful shutdown
+	shutdown, stop := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
+	defer stop()
 
 	// Register gRPC services to the gateway
 	err = gateway.RegisterHandlerFromEndpoint(shutdown, gatewayConfig)

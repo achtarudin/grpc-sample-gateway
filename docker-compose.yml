@@ -6,8 +6,8 @@ services:
       dockerfile: docker/go.dev.Dockerfile
     container_name: grpc-sample-gateway-dev
 
-    env_file:
-      - ./.env
+    # env_file:
+    #   - ./.env
 
     working_dir: /app
 
