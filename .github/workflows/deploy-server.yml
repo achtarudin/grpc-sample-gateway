@@ -1,0 +1,36 @@
+name: Deploy To Server
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+      - dev
+env:
+  IMAGE_NAME: "grpc-sample-gateway-prod"
+  IMAGE_VERSION: "latest"
+  IMAGE_NAME_TAR: "grpc-sample-gateway-prod.tar"
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    env:
+      GATEWAY_PORT: 6000
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Create network traefik-network
+        run: docker network create traefik-network || echo "Network traefik-network already exists"
+
+      - name: "Build Docker Image"
+        run: |
+          docker compose -f docker-compose.prod.yml up -d
+
+      - name: Curl Http Endpoint
+        run: curl http://localhost:${{ env.GATEWAY_PORT }}/docs/index.html
+
