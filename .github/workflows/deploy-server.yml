@@ -1,4 +1,4 @@
-name: Deploy To Server
+name: Deploy Grpc Sample Gateway
 
 on:
   workflow_dispatch:
@@ -9,10 +9,12 @@ on:
     branches:
       - main
       - dev
+
 env:
   IMAGE_NAME: "grpc-sample-gateway-prod"
   IMAGE_VERSION: "latest"
   IMAGE_NAME_TAR: "grpc-sample-gateway-prod.tar"
+
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -35,10 +37,30 @@ jobs:
           echo "GRPC_REMOTE_SERVER=${{ env.GRPC_REMOTE_SERVER }}" >> .env.prod
           echo "GATEWAY_PORT=${{ env.GATEWAY_PORT }}" >> .env.prod
 
-      - name: "Build Docker Image"
+      - name: "Run Docker Compose Prod"
         run: |
           docker compose -f docker-compose.prod.yml up -d
 
       - name: Curl Http Endpoint
         run: curl http://localhost:${{ env.GATEWAY_PORT }}/doc/index.html
 
+  build:
+    needs: test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: "Build Docker Image"
+        run: |
+          IMAGE_NAME="${{ env.IMAGE_NAME }}" IMAGE_VERSION="${{ env.IMAGE_VERSION }}" docker compose -f docker-compose.prod.yml build
+          docker save ${{ env.IMAGE_NAME }}:${{ env.IMAGE_VERSION }} -o ${{ env.IMAGE_NAME_TAR }}
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.IMAGE_NAME }}
+          path: |
+            docker-compose.prod.yml
+            ${{ env.IMAGE_NAME_TAR }}
