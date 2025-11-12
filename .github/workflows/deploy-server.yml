@@ -46,7 +46,8 @@ jobs:
         run: curl http://localhost:${{ env.GATEWAY_PORT }}/doc/index.html
 
   build:
-    # needs: test
+    if: false
+    needs: test
     runs-on: ubuntu-latest
 
     steps:
@@ -67,7 +68,7 @@ jobs:
             ${{ env.IMAGE_NAME_TAR }}
 
   deploy:
-    if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main' && false
     needs: build
     runs-on: [self-hosted, grpc-sample-gateway]
 
@@ -112,3 +113,24 @@ jobs:
 
       - name: Check running containers
         run: docker ps -a
+
+  check:
+    runs-on: [self-hosted, grpc-sample-gateway]
+
+    environment: prod
+
+    env:
+      PATH_PROJECT: ${{ vars.PATH_PROJECT }}
+
+    steps:
+      - name: Enter to project directory
+        run: cd ${{ env.PATH_PROJECT }} && echo $(pwd)
+
+      - name: List files in project directory
+        run: ls -la ${{ env.PATH_PROJECT }}
+
+      - name: Check Whoami
+        run: whoami
+
+      - name: Curl Http Endpoint
+        run: curl http://localhost:6000/doc/index.html
