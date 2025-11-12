@@ -19,6 +19,8 @@ jobs:
 
     env:
       GATEWAY_PORT: 6000
+      GRPC_TLS: true
+      GRPC_REMOTE_SERVER: "grpc-sample.cutbray.tech"
 
     steps:
       - name: Checkout code
@@ -26,6 +28,12 @@ jobs:
 
       - name: Create network traefik-network
         run: docker network create traefik-network || echo "Network traefik-network already exists"
+
+      - name: Create .env.prod file
+        run: |
+          echo "GRPC_TLS=${{ env.GRPC_TLS }}" >> .env.prod
+          echo "GRPC_REMOTE_SERVER=${{ env.GRPC_REMOTE_SERVER }}" >> .env.prod
+          echo "GATEWAY_PORT=${{ env.GATEWAY_PORT }}" >> .env.prod
 
       - name: "Build Docker Image"
         run: |
