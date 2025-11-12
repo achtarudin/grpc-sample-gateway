@@ -34,6 +34,10 @@ func main() {
 	envGrpcTls := helper.GetEnvOrDefault("GRPC_TLS", false)
 	envGatewayPort := helper.GetEnvOrDefault("GATEWAY_PORT", 8081)
 
+	log.Printf("gRPC Remote Server: %s", envGrpcServer)
+	log.Printf("gRPC TLS Enabled: %v", envGrpcTls)
+	log.Printf("Gateway Port: %d", envGatewayPort)
+
 	// Setup gRPC Gateway
 	serveMux := runtime.NewServeMux()
 	gatewayConfig := &gateway.GatewayConfig{

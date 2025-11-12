@@ -7,13 +7,14 @@ services:
     image: ${IMAGE_NAME:-grpc-sample-gateway}:${IMAGE_VERSION:-latest}
     container_name: grpc-sample-gateway-prod
 
-    env_file:
-      - ./.env.prod
+    networks:
+      - traefik-network
+
+    volumes:
+      - .env.prod:/app/.env:ro
 
     ports:
-       - "${GATEWAY_PORT}:${GATEWAY_PORT}"
-    environment:
-      - GATEWAY_PORT=${GATEWAY_PORT}
+      - "6000:5045"
 
 networks:
   traefik-network:

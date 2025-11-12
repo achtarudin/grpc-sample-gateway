@@ -20,7 +20,7 @@ WORKDIR /app
 # result build name is grpc-sample-gateway in Makefile
 COPY --from=builder /app/bin/grpc-sample-gateway .
 
-ENV GATEWAY_PORT=9000
+ENV GATEWAY_PORT=5045
 
 EXPOSE ${GATEWAY_PORT}
 
