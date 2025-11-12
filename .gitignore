@@ -1,4 +1,8 @@
+bin/
+
+.DS_Store
+
 .env
 .env.prod
-bin/
-.DS_Store
+.env.dev
+.env.test

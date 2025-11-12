@@ -5,7 +5,10 @@ services:
       context: .
       dockerfile: docker/go.prod.Dockerfile
     image: ${IMAGE_NAME:-grpc-sample-gateway}:${IMAGE_VERSION:-latest}
+
     container_name: grpc-sample-gateway-prod
+
+    restart: unless-stopped
 
     networks:
       - traefik-network
