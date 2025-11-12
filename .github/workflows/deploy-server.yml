@@ -21,8 +21,8 @@ jobs:
 
     env:
       GATEWAY_PORT: 6000
-      GRPC_TLS: true
-      GRPC_REMOTE_SERVER: "grpc-sample.cutbray.tech"
+      GRPC_TLS: false
+      GRPC_REMOTE_SERVER: "localhost:8080"
 
     steps:
       - name: Checkout code
@@ -64,3 +64,50 @@ jobs:
           path: |
             docker-compose.prod.yml
             ${{ env.IMAGE_NAME_TAR }}
+
+  deploy:
+    if: github.ref == 'refs/heads/main'
+    needs: build
+    runs-on: [grpc-sample-gateway]
+
+    environment: prod
+
+    env:
+      PATH_PROJECT: ${{ vars.PATH_PROJECT }}
+
+    steps:
+      # - name: Checkout repository
+      #   uses: actions/checkout@v5
+
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ env.IMAGE_NAME }}
+          path: ${{ env.PATH_PROJECT }}
+
+      - name: Load Docker Image
+        run: |
+          cd ${{ env.PATH_PROJECT }}
+          docker load -i ${{ env.IMAGE_NAME_TAR }}
+
+      - name: List Docker images
+        run: docker image ls
+
+      - name: Run Production App with Docker Compose
+        run: |
+          cd ${{ env.PATH_PROJECT }} && echo $(pwd)
+          IMAGE_NAME="${{ env.IMAGE_NAME }}" IMAGE_VERSION="${{ env.IMAGE_VERSION }}" docker compose -f docker-compose.prod.yml up -d
+
+      - name: Cleanup unused Docker images
+        run: docker image prune -af
+
+      - name: List Docker images
+        run: docker image ls
+
+      - name: Remove tar file and List files in workspace
+        run: |
+          cd ${{ env.PATH_PROJECT }}
+          rm ${{ env.IMAGE_NAME_TAR }} && ls -la
+
+      - name: Check running containers
+        run: docker ps -a
