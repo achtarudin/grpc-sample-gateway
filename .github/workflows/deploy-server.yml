@@ -46,7 +46,6 @@ jobs:
         run: curl http://localhost:${{ env.GATEWAY_PORT }}/doc/index.html
 
   build:
-    if: false
     needs: test
     runs-on: ubuntu-latest
 
