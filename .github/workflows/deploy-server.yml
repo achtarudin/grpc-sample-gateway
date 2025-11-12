@@ -40,5 +40,5 @@ jobs:
           docker compose -f docker-compose.prod.yml up -d
 
       - name: Curl Http Endpoint
-        run: curl http://localhost:${{ env.GATEWAY_PORT }}/docs/index.html
+        run: curl http://localhost:${{ env.GATEWAY_PORT }}/doc/index.html
 
